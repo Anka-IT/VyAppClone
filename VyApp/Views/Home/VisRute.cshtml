@@ -1,0 +1,74 @@
+﻿@model List<VyApp.Models.Pris>
+@{
+    ViewBag.Title = "VisRute";
+}
+
+<h2>Kommende avganger</h2>
+Du ønsker å reise fra @ViewBag.frastasjon til @ViewBag.tilstasjon kl @ViewBag.tid @ViewBag.dato.<br/>
+Vi fant følgende avganger:
+
+<table class="table-striped">
+    <tr>
+        <th>
+            Linje
+        </th>
+        <th>
+            Fra Stasjon
+        </th>
+        <th>
+            Til Stasjon
+        </th>
+        <th>
+            Voksen
+        </th>
+        <th>
+            Barn
+        </th>
+        <th>
+            Ungdom
+        </th>
+        <th>
+            Student
+        </th>
+        <th>
+            Honnør
+        </th>
+        <th>
+            Vernepliktig
+        </th>
+    </tr>
+
+
+    @foreach (var prisen in ViewBag.pris)
+    {
+        <tr>
+            <td>
+                @prisen.linjeNavn
+            </td>
+            <td>
+                @prisen.fraStasjon
+            </td>
+            <td>
+                @prisen.tilStasjon
+            </td>
+            <td>
+                @prisen.voksen kr
+            </td>
+            <td>
+                @prisen.barn kr
+            </td>
+            <td>
+                @prisen.ungdom kr
+            </td>
+            <td>
+                @prisen.student kr
+            </td>
+            <td>
+                @prisen.honnor kr
+            </td>
+            <td>
+                @prisen.verneplikt kr
+            </td>
+        </tr>
+    }
+</table>

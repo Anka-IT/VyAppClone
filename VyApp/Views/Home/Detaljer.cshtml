@@ -1,0 +1,52 @@
+﻿@model List<VyApp.Models.Stasjon>
+
+@{
+    ViewBag.Title = "Detaljer";
+}
+
+<h2>Detaljer</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model[0].linjeNavn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].stasjonsNavn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].distanse)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].tid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].spor)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.linjeNavn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.stasjonsNavn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.distanse)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.spor)
+        </td>
+        <!--td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id })
+        </td-->
+    </tr>
+}
+
+</table>

@@ -1,0 +1,55 @@
+﻿@model List<VyApp.Models.Linje>
+
+@{
+    ViewBag.Title = "ListLinjer";
+}
+
+<h2>Oversikt over toglinjer</h2>
+
+<!--p>
+    @Html.ActionLink("NyLinje", "NyLinje")
+</p-->
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model[0].linjeNavn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].avreisestasjon)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].ankomststasjon)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].tid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].lengde)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.linjeNavn)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.avreisestasjon)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ankomststasjon)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.tid)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.lengde)
+    </td>
+    <td>
+        @Html.ActionLink("Detaljer", "Detaljer", new { id = item.linjeNavn })
+    </td>
+</tr>
+}
+
+</table>

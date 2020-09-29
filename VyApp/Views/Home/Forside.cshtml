@@ -1,0 +1,163 @@
+﻿<script>
+    //Javascript for datepicker på forsiden basert på kode fra https://www.w3schools.com/code/tryit.asp?filename=FTUTR9BYRNI0
+    $(function () {
+        $("#datepicker").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0, maxDate: "+1M +15D" });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+
+        //Gjør justeringer på feltene etter å valgt fra stasjon ut av listen generert av ajax-kallet
+        //Denne funksjonen skal i utgangspunktet være ha selektoren #frastasjonliste > div men den virket ikke som ønsket.
+        $('#frastasjonliste').click(function () {
+            var id = $(this).html();
+            //$("#frastasjon").val(id);
+            $("#fra").prop('disabled', true);
+            var value = $("#fra").val();
+            $("#frastasjon").val(value);
+            $('.resetfra').toggle();
+            $('#frastasjonliste').html("");
+            if ($('#til').prop('disabled')) $("#sokeknapp").prop('disabled', false);
+        });
+
+        //Gjør justeringer på feltene etter å valgt til stasjon ut av listen generert av ajax-kallet
+        //Denne funksjonen skal i utgangspunktet være ha selektoren #tilstasjonliste > div men den virket ikke som ønsket.
+        $('#tilstasjonliste').click(function () {
+            var id = $(this).html();
+            //$("#tilstasjon").val(id);
+            $("#til").prop('disabled', true);
+            var value = $("#til").val();
+            $("#tilstasjon").val(value);
+            $('.resettil').toggle();
+            $('#tilstasjonliste').html("");
+            if ($('#fra').prop('disabled')) $("#sokeknapp").prop('disabled', false);
+        });
+
+        //nullstiller fra-stasjon feltet
+        $('.resetfra').click(function () {
+            $('#frastasjon').val("");
+            $('#fra').val("");
+            $("#fra").prop('disabled', false);
+            $("#sokeknapp").prop('disabled', true);
+            $(this).toggle();
+        });
+        //nullstiller til-stasjon feltet
+        $('.resettil').click(function () {
+            $('#tilstasjon').val("");
+            $('#til').val("");
+            $("#til").prop('disabled', false);
+            $("#sokeknapp").prop('disabled', true);
+            $(this).toggle();
+        });
+
+        //bytter om på fra og til feltene
+        $('.bytt').click(function () {
+            var fra = $("#fra").val();
+            var fradisabled = $('#fra').prop('disabled');
+            var tildisabled = $('#til').prop('disabled');
+            $('#fra').prop('disabled', tildisabled);
+            $('#til').prop('disabled', fradisabled);
+            var til = $("#til").val();
+            $("#frastasjon").val(til);
+            $("#tilstasjon").val(fra);
+            $("#fra").val(til);
+            $("#til").val(fra);
+            $("#frastasjonliste").html("");
+            $("#tilstasjonliste").html("");
+        });
+
+        //henter liste over stasjoner når man begynner å skrive på fra-stasjon feltet
+        $("#fra").on('keyup', function () {
+            var id = $(this).val();
+            $("#frastasjonliste").html(id);
+            $.ajax({
+                url: '/Home/hentAlleStasjoner/?sok=' + id,
+                type: 'GET',
+                dataType: 'text',
+                success: function (stasjoner) {
+                    $("#frastasjonliste").html(stasjoner);
+                    $("#tilstasjonliste").html("");
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        });
+
+        //henter liste over stasjoner når man begynner å skrive på til-stasjon feltet
+        $("#til").on('keyup', function () {
+            var id = $(this).val();
+            $("#tilstasjonliste").html(id);
+            $.ajax({
+                url: '/Home/hentAlleStasjoner/?sok=' + id,
+                type: 'GET',
+                dataType: 'text',
+                success: function (stasjoner) {
+                    $("#tilstasjonliste").html(stasjoner);
+                    $("#frastasjonliste").html("");
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        });
+
+    });
+</script>
+
+
+
+@{
+    ViewBag.Title = "Forside";
+}
+
+<h2>Hei, hvor vil du reise?</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Vennligst velg din reiserute</h4>
+        <hr />
+        <div class="form-group row">
+            <div class="col-5">
+                <label class="control-label col" for="frastasjon">Reise fra</label>
+                <div><input id="fra" class="form-control form-control-lg" type="text" value="" placeholder="Fra Stasjon" name="fra" /><div class="resetfra">X</div></div>
+                <ul id="frastasjonliste"></ul>
+                <input id="frastasjon" type="hidden" value="" name="frastasjon" />
+            </div>
+            <div class="col-2" style="text-align:center;">
+                <img class="bytt" style="width:50%;margin-top:40px;" src="~/Content/bytt.png" />
+            </div>
+            <div class="col-5">
+                <label class="control-label col" for="tilstasjon">Reise til</label>
+                <div>
+                    <input id="til" class="form-control form-control-lg" type="text" value="" placeholder="Til Stasjon" name="tilstasjon" /><div class="resettil">X</div>
+                </div>
+                <ul id="tilstasjonliste"></ul>
+                <input id="tilstasjon" class="form-control" type="hidden" value="" name="tilstasjon" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-5">
+                <input type="text" id="datepicker" name="dato" placeholder="Klikk for å velge avreisedato" class="form-control" />
+             </div>
+            <div class="col-2">
+              </div>
+            <div class="col-5">
+                <select class="form-control" name="tid"><option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option><option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option></select>
+            </div>
+            </div>
+        <div class="form-group row">
+            <div class="col-5">
+            </div>
+            <div class="col-2">
+                <input id="sokeknapp" type="submit" value="SØK" class="btn btn-primary" disabled />
+            </div>
+            <div class="col-5">
+            </div>
+        </div>
+        </div>
+}
